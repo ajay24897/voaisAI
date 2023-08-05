@@ -56,7 +56,6 @@ const style = StyleSheet.create({
     },
     shadowOpacity: 0.27,
     shadowRadius: 4.65,
-
     elevation: 4,
   },
   image: {
@@ -85,20 +84,6 @@ const style = StyleSheet.create({
     fontSize: fontsize.small,
     lineHeight: fontsize.medium,
   },
-  wrapper: {
-    flex: 1,
-  },
-  flexRowSpaceArround: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: responsiveScreenHeight(1),
-  },
-  gifImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 100,
-    overlayColor: 'rgb(25,30,40)',
-  },
   userText: {
     borderTopRightRadius: 0,
     alignSelf: 'flex-end',
@@ -106,21 +91,5 @@ const style = StyleSheet.create({
   assistantText: {
     alignSelf: 'flex-start',
     borderTopLeftRadius: 0,
-  },
-  CTAView: {width: '25%', alignItems: 'center'},
-  CTA: {
-    fontSize: fontsize.extraSmall,
-    color: '#fff',
-    marginVertical: responsiveScreenHeight(1),
-    marginHorizontal: responsiveScreenWidth(4),
-  },
-  horizontalCenter: {
-    alignItems: 'center',
-  },
-  borderRadius: {
-    borderRadius: 20,
-  },
-  with50: {
-    width: '50%',
   },
 });
