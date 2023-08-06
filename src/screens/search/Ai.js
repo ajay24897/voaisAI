@@ -352,7 +352,12 @@ const dummyRes = [
       'https://oaidalleapiprodscus.blob.core.windows.net/private/org-O9DYCkYkwKEHhVKBHibYkIs8/user-xTE8gDGvaoLkCMd4JvX3jH5z/img-GfwmQYhB08Beja757FgoFgEN.png?st=2023-08-05T16%3A24%3A07Z&se=2023-08-05T18%3A24%3A07Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-08-05T11%3A46%3A32Z&ske=2023-08-06T11%3A46%3A32Z&sks=b&skv=2021-08-06&sig=cY7GBt59NbkBqJHsQQttAownIuShw4pl59uxaG6tLII%3D',
     role: 'assistant',
   },
-  {content: 'very smart Abu', role: 'user'},
+  {
+    content:
+      'Choosing the best Reebok shoes depends on your personal preferences, activities, and needs. Here are some popular and highly recommended Reebok shoe models 1. Reebok Nano X: These shoes are designed for cross-training and are known for their durability and versatility.2. Reebok Classic Leather: A timeless and iconic sneaker that offers both style and comfort. Its great for casual wear.3. Reebok Floatride Run: Ideal for running, these shoes provide excellent cushioning and responsiveness for a smooth and comfortable ride',
+
+    role: 'assistant',
+  },
   // {
   //   content:
   //     "Thank you for the compliment! However, it's worth noting that as an AI language model, I don't have physical capabilities or appearances like smartness. I'm here to assist you with any questions or information you need. Let me know how I can help!",

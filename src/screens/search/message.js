@@ -6,9 +6,10 @@ import {
   responsiveScreenHeight,
   responsiveScreenWidth,
 } from 'react-native-responsive-dimensions';
-import React from 'react';
+import React, {memo, useState} from 'react';
 
 function Message({mes}) {
+  const [showFullMsg, setShowFullMsg] = useState(false);
   return mes?.content?.includes('https') ? (
     <LinearGradient
       colors={[secondary[300], secondary[400]]}
@@ -35,12 +36,25 @@ function Message({mes}) {
         style.textView,
         mes.role === 'user' ? style.userText : style.assistantText,
       ]}>
-      <Text style={style.text}>{mes?.content}</Text>
+      {mes.role === 'user' && <Text style={style.text}>{mes?.content}</Text>}
+      {mes.content.length > 300 && mes.role === 'assistant' && (
+        <Text style={style.text}>
+          {showFullMsg ? mes?.content : mes?.content.slice(0, 200)}
+          <Text
+            onPress={() => setShowFullMsg(pre => !pre)}
+            style={{color: primary[500]}}>
+            {showFullMsg ? ' See less' : '...See more'}
+          </Text>
+        </Text>
+      )}
+      {mes.content.length < 300 && mes.role === 'assistant' && (
+        <Text style={style.text}>{mes?.content}</Text>
+      )}
     </LinearGradient>
   );
 }
 
-export default Message;
+export default memo(Message);
 
 const style = StyleSheet.create({
   imageView: {
