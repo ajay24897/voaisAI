@@ -1,56 +1,88 @@
 const {default: LinearGradient} = require('react-native-linear-gradient');
 import {grey, primary, secondary} from '../../constants/color';
-import {StyleSheet, Text, Image} from 'react-native';
+import {StyleSheet, Text, Image, View, Animated} from 'react-native';
 import {fontsize} from '../../constants/fontsize';
 import {
   responsiveScreenHeight,
   responsiveScreenWidth,
 } from 'react-native-responsive-dimensions';
-import React, {memo, useState} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 
 function Message({mes}) {
   const [showFullMsg, setShowFullMsg] = useState(false);
-  return mes?.content?.includes('https') ? (
-    <LinearGradient
-      colors={[secondary[300], secondary[400]]}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}
-      style={style.imageView}>
-      <Image
-        source={{uri: mes.content}}
-        resizeMode="contain"
-        style={style.image}
-        alt="image can not load"
-      />
-    </LinearGradient>
-  ) : (
-    <LinearGradient
-      colors={
-        mes.role === 'user'
-          ? [primary[300], primary[400], primary[500]]
-          : [secondary[300], secondary[400]]
-      }
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}
-      style={[
-        style.textView,
-        mes.role === 'user' ? style.userText : style.assistantText,
-      ]}>
-      {mes.role === 'user' && <Text style={style.text}>{mes?.content}</Text>}
-      {mes.content.length > 300 && mes.role === 'assistant' && (
-        <Text style={style.text}>
-          {showFullMsg ? mes?.content : mes?.content.slice(0, 200)}
-          <Text
-            onPress={() => setShowFullMsg(pre => !pre)}
-            style={{color: primary[500]}}>
-            {showFullMsg ? ' See less' : '...See more'}
-          </Text>
-        </Text>
+  const animation = useState(new Animated.Value(30));
+  const opacity = useState(new Animated.Value(0.25));
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(animation[0], {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(opacity[0], {
+        toValue: 1,
+        duration: 2000,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
+  return (
+    <Animated.View
+      style={{
+        opacity: opacity[0],
+        transform: [
+          {
+            translateY: animation[0],
+          },
+        ],
+      }}>
+      {mes?.content?.includes('https') ? (
+        <LinearGradient
+          colors={[secondary[300], secondary[400]]}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          style={style.imageView}>
+          <Image
+            source={{uri: mes.content}}
+            resizeMode="contain"
+            style={style.image}
+            alt="image can not load"
+          />
+        </LinearGradient>
+      ) : (
+        <LinearGradient
+          colors={
+            mes.role === 'user'
+              ? [primary[300], primary[400], primary[500]]
+              : [secondary[300], secondary[400]]
+          }
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          style={[
+            style.textView,
+            mes.role === 'user' ? style.userText : style.assistantText,
+          ]}>
+          {mes.role === 'user' && (
+            <Text style={style.text}>{mes?.content}</Text>
+          )}
+          {mes.content.length > 300 && mes.role === 'assistant' && (
+            <Text style={style.text}>
+              {showFullMsg ? mes?.content : mes?.content.slice(0, 200)}
+              <Text
+                onPress={() => setShowFullMsg(pre => !pre)}
+                style={{color: primary[500]}}>
+                {showFullMsg ? ' See less' : '...See more'}
+              </Text>
+            </Text>
+          )}
+          {mes.content.length < 300 && mes.role === 'assistant' && (
+            <Text style={style.text}>{mes?.content}</Text>
+          )}
+        </LinearGradient>
       )}
-      {mes.content.length < 300 && mes.role === 'assistant' && (
-        <Text style={style.text}>{mes?.content}</Text>
-      )}
-    </LinearGradient>
+    </Animated.View>
   );
 }
 

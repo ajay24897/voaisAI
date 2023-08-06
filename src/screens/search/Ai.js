@@ -9,6 +9,7 @@ import {
   StatusBar,
   FlatList,
   ActivityIndicator,
+  ToastAndroid,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import Voice from '@react-native-community/voice';
@@ -26,7 +27,7 @@ import voice from '../../assets/voice.png';
 import voiceGif from '../../assets/recording.gif';
 
 export default function Ai() {
-  const [messages, setMessages] = useState(dummyRes);
+  const [messages, setMessages] = useState([]);
   const [isRecording, setIsRecordig] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [result, setResult] = useState('');
@@ -59,7 +60,6 @@ export default function Ai() {
     try {
       setIsRecordig(false);
       await Voice.stop();
-
       getAiResponse();
     } catch (e) {
       console.log('stopRecoding', e);
@@ -84,6 +84,7 @@ export default function Ai() {
       newMsg.push({role: 'user', content: result.trim()});
       setMessages([...newMsg]);
       setIsLoading(true);
+      console.log('result.trim()', result.trim());
       apiCall(result.trim(), newMsg)
         .then(res => {
           setIsLoading(false);
@@ -92,7 +93,7 @@ export default function Ai() {
             setMessages([...res.data]);
             startSpeech(res.data[res.data.length - 1]);
           } else {
-            console.log(res.msg);
+            if (res.msg) ToastAndroid.show(res.msg, 1500);
           }
         })
         .catch(() => setIsLoading(false));
@@ -100,19 +101,44 @@ export default function Ai() {
   };
 
   useEffect(() => {
-    if (
-      !messages[messages.length - 1]?.content.startsWith('https') &&
-      messages[messages.length - 1]?.role === 'assistant'
-    ) {
+    // if (
+    //   !messages[messages.length - 1]?.content.startsWith('https') &&
+    //   messages[messages.length - 1]?.role === 'assistant'
+    // ) {
+    //   if (Platform.OS === 'ios') {
+    //     Tts.speak(messages[messages.length - 1].content, {
+    //       iosVoiceId: 'com.apple.ttsbundle.Moira-compact',
+    //       rate: 0.5,
+    //     });
+    //   } else {
+    //     Tts.getInitStatus().then(
+    //       () => {
+    //         Tts.speak(messages[messages.length - 1].content, {
+    //           iosVoiceId: 'com.apple.ttsbundle.Moira-compact',
+    //           rate: 0.5,
+    //         });
+    //       },
+    //       err => {
+    //         if (err.code === 'no_engine') {
+    //           Tts.requestInstallEngine();
+    //         }
+    //       },
+    //     );
+    //   }
+    // }
+  }, [messages.length]);
+
+  const startSpeech = msg => {
+    if (!msg?.content.startsWith('https') && msg?.role === 'assistant') {
       if (Platform.OS === 'ios') {
-        Tts.speak(messages[messages.length - 1].content, {
+        Tts.speak(msg.content, {
           iosVoiceId: 'com.apple.ttsbundle.Moira-compact',
           rate: 0.5,
         });
       } else {
         Tts.getInitStatus().then(
           () => {
-            Tts.speak(messages[messages.length - 1].content, {
+            Tts.speak(msg.content, {
               iosVoiceId: 'com.apple.ttsbundle.Moira-compact',
               rate: 0.5,
             });
@@ -125,9 +151,7 @@ export default function Ai() {
         );
       }
     }
-  }, [messages.length]);
-
-  const startSpeech = msg => {
+    console.log('msg', msg);
     Tts.stop();
   };
   const stopSpeaking = () => {
@@ -152,41 +176,6 @@ export default function Ai() {
     return () => Voice.destroy().then(Voice.removeAllListeners);
   }, []);
 
-  const renderItem = mes => {
-    if (mes.content.includes('https')) {
-      return (
-        <LinearGradient
-          colors={[secondary[300], secondary[400]]}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          style={style.imageView}>
-          <Image
-            source={{uri: mes.content}}
-            resizeMode="contain"
-            style={style.image}
-            alt="image can not load"
-          />
-        </LinearGradient>
-      );
-    } else {
-      return (
-        <LinearGradient
-          colors={
-            mes.role === 'user'
-              ? [primary[300], primary[400], primary[500]]
-              : [secondary[300], secondary[400]]
-          }
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          style={[
-            style.textView,
-            mes.role === 'user' ? style.userText : style.assistantText,
-          ]}>
-          <Text style={style.text}>{mes.content}</Text>
-        </LinearGradient>
-      );
-    }
-  };
   return (
     <SafeAreaView style={[style.wrapper, {backgroundColor: secondary[500]}]}>
       <StatusBar backgroundColor={secondary[500]} />
@@ -237,7 +226,7 @@ export default function Ai() {
                 style={style.gifImage}
                 resizeMode="cover"
               />
-              <Text style={style.CTA}>Tap to speak</Text>
+              <Text style={style.CTA}>Tap to stop</Text>
             </TouchableOpacity>
           )}
         </View>
