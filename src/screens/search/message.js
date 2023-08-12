@@ -1,6 +1,12 @@
 const {default: LinearGradient} = require('react-native-linear-gradient');
 import {grey, primary, secondary} from '../../constants/color';
-import {StyleSheet, Text, Image, View, Animated} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  Animated,
+  ActivityIndicator,
+  ImageBackground,
+} from 'react-native';
 import {fontsize} from '../../constants/fontsize';
 import {
   responsiveScreenHeight,
@@ -10,6 +16,9 @@ import React, {memo, useEffect, useState} from 'react';
 
 function Message({mes}) {
   const [showFullMsg, setShowFullMsg] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
+  const [hasImageLoadError, setHasImageLoadError] = useState(false);
+
   const animation = useState(new Animated.Value(30));
   const opacity = useState(new Animated.Value(0.25));
 
@@ -44,12 +53,28 @@ function Message({mes}) {
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           style={style.imageView}>
-          <Image
+          <ImageBackground
+            onError={e => {
+              setHasImageLoadError(true);
+              setImageLoading(false);
+            }}
+            imageStyle={{borderRadius: 20}}
+            onLoad={() => setImageLoading(false)}
             source={{uri: mes.content}}
-            resizeMode="contain"
-            style={style.image}
-            alt="image can not load"
-          />
+            // source={{
+            //   uri: 'https://images.pexels.com/photos/699466/pexels-photo-699466.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+            // }}
+            resizeMode="cover"
+            style={[
+              style.image,
+              {justifyContent: 'center', alignItems: 'center'},
+            ]}
+            alt="image can not load">
+            {imageLoading && <ActivityIndicator />}
+            {hasImageLoadError && (
+              <Text style={{textAlign: 'center'}}>Sorry, no image found</Text>
+            )}
+          </ImageBackground>
         </LinearGradient>
       ) : (
         <LinearGradient

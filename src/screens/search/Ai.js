@@ -52,8 +52,11 @@ export default function Ai() {
   }, [result]);
 
   const onSpeechError = e => {
-    console.log('onSpeechError', e);
     setIsRecordig(false);
+    if (e.error.message) {
+      ToastAndroid.show(e.error.message, 1500);
+    }
+    console.log('onSpeechError', e);
   };
 
   const stopRecoding = async () => {
@@ -105,54 +108,37 @@ export default function Ai() {
     //   !messages[messages.length - 1]?.content.startsWith('https') &&
     //   messages[messages.length - 1]?.role === 'assistant'
     // ) {
-    //   if (Platform.OS === 'ios') {
-    //     Tts.speak(messages[messages.length - 1].content, {
-    //       iosVoiceId: 'com.apple.ttsbundle.Moira-compact',
-    //       rate: 0.5,
-    //     });
-    //   } else {
-    //     Tts.getInitStatus().then(
-    //       () => {
-    //         Tts.speak(messages[messages.length - 1].content, {
-    //           iosVoiceId: 'com.apple.ttsbundle.Moira-compact',
-    //           rate: 0.5,
-    //         });
-    //       },
-    //       err => {
-    //         if (err.code === 'no_engine') {
-    //           Tts.requestInstallEngine();
-    //         }
-    //       },
-    //     );
-    //   }
+    if (Platform.OS === 'ios') {
+      Tts.speak('', {
+        iosVoiceId: 'com.apple.ttsbundle.Moira-compact',
+        rate: 0.5,
+      });
+    } else {
+      Tts.getInitStatus().then(
+        () => {
+          Tts.speak('', {
+            iosVoiceId: 'com.apple.ttsbundle.Moira-compact',
+            rate: 0.5,
+          });
+        },
+        err => {
+          if (err.code === 'no_engine') {
+            Tts.requestInstallEngine();
+          }
+        },
+      );
+    }
     // }
   }, [messages.length]);
 
   const startSpeech = msg => {
     if (!msg?.content.startsWith('https') && msg?.role === 'assistant') {
-      if (Platform.OS === 'ios') {
-        Tts.speak(msg.content, {
-          iosVoiceId: 'com.apple.ttsbundle.Moira-compact',
-          rate: 0.5,
-        });
-      } else {
-        Tts.getInitStatus().then(
-          () => {
-            Tts.speak(msg.content, {
-              iosVoiceId: 'com.apple.ttsbundle.Moira-compact',
-              rate: 0.5,
-            });
-          },
-          err => {
-            if (err.code === 'no_engine') {
-              Tts.requestInstallEngine();
-            }
-          },
-        );
-      }
+      Tts.speak(msg.content, {
+        iosVoiceId: 'com.apple.ttsbundle.Moira-compact',
+        rate: 0.5,
+      });
     }
     console.log('msg', msg);
-    Tts.stop();
   };
   const stopSpeaking = () => {
     Tts.stop();
