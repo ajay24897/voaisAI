@@ -7,4 +7,5 @@ export const fontsize = {
   medium: responsiveScreenFontSize(2), //17
   large: responsiveScreenFontSize(2.5), // 22
   extraLarge: responsiveScreenFontSize(3), // 26
+  huge: responsiveScreenFontSize(3.25), // 26
 };

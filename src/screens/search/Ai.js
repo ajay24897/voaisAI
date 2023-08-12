@@ -27,7 +27,7 @@ import voice from '../../assets/voice.png';
 import voiceGif from '../../assets/recording.gif';
 
 export default function Ai() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(dummyRes);
   const [isRecording, setIsRecordig] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [result, setResult] = useState('');

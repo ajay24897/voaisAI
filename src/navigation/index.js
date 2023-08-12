@@ -10,11 +10,11 @@ function Navigation() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {/* <Stack.Screen
+        <Stack.Screen
           name="onboarding"
           component={Onboarding}
           options={{headerShown: false}}
-        /> */}
+        />
         <Stack.Screen
           name="search"
           component={Search}

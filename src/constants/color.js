@@ -6,6 +6,15 @@ export const primary = {
   100: '##7674cc',
 };
 
+export const primary2 = {
+  500: 'rgb(200,71,208)',
+  400: 'rgb(231,106,231)',
+  300: 'rgb(217,117,231)',
+  200: 'rgb(214,177,192)',
+
+  100: 'rgb(230,86,126)',
+};
+
 export const secondary = {
   500: '#191e28',
   300: '#1e232d',
