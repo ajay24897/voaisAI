@@ -1,5 +1,5 @@
 const {default: LinearGradient} = require('react-native-linear-gradient');
-import {grey, primary, secondary} from '../../constants/color';
+import {grey, primary, primary2, secondary} from '../../constants/color';
 import {
   StyleSheet,
   Text,
@@ -80,7 +80,7 @@ function Message({mes}) {
         <LinearGradient
           colors={
             mes.role === 'user'
-              ? [primary[300], primary[400], primary[500]]
+              ? [primary2[700], primary2[800], primary2[900]]
               : [secondary[300], secondary[400]]
           }
           start={{x: 0, y: 0}}
@@ -97,7 +97,7 @@ function Message({mes}) {
               {showFullMsg ? mes?.content : mes?.content.slice(0, 200)}
               <Text
                 onPress={() => setShowFullMsg(pre => !pre)}
-                style={{color: primary[500]}}>
+                style={{color: primary2[800]}}>
                 {showFullMsg ? ' See less' : '...See more'}
               </Text>
             </Text>

@@ -1,57 +1,48 @@
-// import {View, Text} from 'react-native';
-// import React from 'react';
-
-// export default function Onboarding() {
-//   return (
-//     <View>
-//       <Text>Onboarding</Text>
-//     </View>
-//   );
-// }
 import React, {useRef, useState} from 'react';
-
 import {
   View,
   Text,
   SafeAreaView,
-  Image,
   Dimensions,
   StatusBar,
   StyleSheet,
   FlatList,
-  Button,
+  TouchableOpacity,
 } from 'react-native';
-// import {FlatList} from 'react-native-gesture-handler';
-// import {Button} from '@react-native-material/core';
-import {color, grey, secondary} from '../../constants/color';
+import {commonColors, grey, primary2, secondary} from '../../constants/color';
 import {
   responsiveScreenHeight,
   responsiveScreenWidth,
 } from 'react-native-responsive-dimensions';
-import Home, {OpenAI, TTS} from './home';
+import LandingPage, {OpenAI, TTS} from './onboardingPages';
+import {LinearTextGradient} from 'react-native-text-gradient';
+import {fontsize} from '../../constants/fontsize';
+import Bot from '../../assets/images/bot.png';
+import OpenAi from '../../assets/images/open-ai.png';
+import Onboardingscreen from './onboardingPages';
 
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 const slides = [
   {
-    id: 1,
-    // image: require('../../assets/ease.png'),
-    title: 'Integaration with OpenAI',
-    desc: 'Note down your most important notes with ease',
-    page: 'home',
+    image: Bot,
+    title: 'VoaisAI : Your own',
+    subTitle: 'AI Assistant',
+    desc: 'VoaisAI can answer for followup \nquestions & be your advisor',
+    page: 'landingPage',
   },
   {
-    id: 2,
-    // image: require('../../assets/search.png'),
-    title: 'Dall - E',
-    desc: 'Search your note quickly and easily',
+    image: OpenAi,
+    title: 'Integrated with OpenAI',
+    subTitle: '(ChatGPT and DALL·E)',
+    desc: 'For answering all the question & \nto create image from a description',
     page: 'openAi',
   },
   {
-    id: 3,
-    // image: require('../../assets/quick-access.png'),
-    title: 'Quick Access',
-    desc: 'Access your notes from anywhere using App and keep your self upto date',
+    image: Bot,
+    title: 'Voice search &',
+    subTitle: 'Read aloud',
+    desc: 'Simply speak your query & get \nanswer into natural-sounding speech',
     page: 'tts',
   },
 ];
@@ -75,10 +66,6 @@ export default function Onboarding({navigation}) {
     setCurrentSlide(Prev => Prev + 1);
   };
 
-  const handleSkip = () => {
-    OnboardingFlowDone();
-  };
-
   const OnboardingFlowDone = async () => {
     // dispatch(onboardingDone());
     navigation.replace('search');
@@ -94,16 +81,23 @@ export default function Onboarding({navigation}) {
         data={slides}
         horizontal
         showsHorizontalScrollIndicator={false}
-        renderItem={({item}) => <Slide item={item} />}
+        renderItem={({item}) => <Onboardingscreen item={item} />}
         contentContainerStyle={{}}
       />
 
       <View style={styles.footerWrapper}>
-        <Button onPress={handleSkip} title="Skip" />
-
         <Indicator currentSlide={currentSlide} />
-
-        <Button onPress={handleNextClick} title="Next" />
+        <TouchableOpacity onPress={handleNextClick}>
+          <LinearTextGradient
+            numberOfLines={1}
+            useViewFrame={true}
+            locations={[0, 1]}
+            colors={[primary2[500], primary2[100]]}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}>
+            <Text style={styles.nextCTA}>Next</Text>
+          </LinearTextGradient>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -119,7 +113,8 @@ const Indicator = ({currentSlide}) => {
             style={[
               // eslint-disable-next-line react-native/no-inline-styles
               {
-                backgroundColor: index === currentSlide ? '#fff' : grey[400],
+                backgroundColor:
+                  index === currentSlide ? commonColors.white : grey[400],
               },
               styles.indicator,
             ]}
@@ -131,39 +126,23 @@ const Indicator = ({currentSlide}) => {
 };
 
 function Slide({item}) {
-  console.log(item.page);
-
   switch (item.page) {
-    case 'home':
-      return <Home />;
+    case 'landingPage':
+      return <LandingPage data={item} />;
 
     case 'openAi':
-      return <OpenAI />;
+      return <OpenAI data={item} />;
 
     case 'tts':
-      return <TTS />;
+      return <TTS data={item} />;
 
     default:
-      return <OpenAI />;
+      return <></>;
   }
 }
 
 const styles = StyleSheet.create({
   safeAreaView: {flex: 1, backgroundColor: secondary[500]},
-  title: {
-    textAlign: 'center',
-    color: '#fff',
-  },
-  desc: {
-    textAlign: 'center',
-    color: '#fff',
-  },
-  illustationImage: {
-    height: '60%',
-    width: width * 0.95,
-    resizeMode: 'contain',
-  },
-  slideWrapper: {alignItems: 'center', width},
   footerWrapper: {
     flexDirection: 'row',
     width: '100%',
@@ -183,7 +162,10 @@ const styles = StyleSheet.create({
     marginLeft: responsiveScreenWidth(1),
     height: responsiveScreenWidth(2),
     width: responsiveScreenWidth(2),
-
     borderRadius: responsiveScreenHeight(2),
+  },
+  nextCTA: {
+    fontSize: fontsize.medium,
+    letterSpacing: 1.5,
   },
 });

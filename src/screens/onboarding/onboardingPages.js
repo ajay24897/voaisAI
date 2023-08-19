@@ -1,30 +1,24 @@
 import {View, Text, Dimensions, Image, StyleSheet} from 'react-native';
 import React from 'react';
-const {width, height} = Dimensions.get('window');
 import Bot from '../../assets/images/bot.png';
 import OpenAi from '../../assets/images/open-ai.png';
 import {LinearTextGradient} from 'react-native-text-gradient';
 
 import {
-  responsiveHeight,
   responsiveScreenHeight,
   responsiveScreenWidth,
 } from 'react-native-responsive-dimensions';
 import {fontsize} from '../../constants/fontsize';
-import {primary, primary2} from '../../constants/color';
+import {primary2} from '../../constants/color';
 
-const Home = () => {
+const {width} = Dimensions.get('window');
+
+const Onboardingscreen = ({item}) => {
+  console.log(item);
+  const {image, title, subTitle, desc} = item;
   return (
     <View style={{flex: 1, width, padding: responsiveScreenWidth(2)}}>
-      <Image
-        source={Bot}
-        style={{
-          width: responsiveScreenWidth(60),
-          height: responsiveScreenWidth(60),
-          alignSelf: 'center',
-          marginVertical: responsiveScreenWidth(20),
-        }}
-      />
+      <Image source={image} style={style.image} />
       <View style={style.textWrapper}>
         <LinearTextGradient
           numberOfLines={1}
@@ -33,7 +27,7 @@ const Home = () => {
           colors={[primary2[500], primary2[100]]}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}>
-          <Text style={style.heading}>VoaisAI : Your own</Text>
+          <Text style={style.heading}>{title}</Text>
         </LinearTextGradient>
 
         <LinearTextGradient
@@ -43,12 +37,10 @@ const Home = () => {
           colors={[primary2[500], primary2[100]]}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}>
-          <Text style={style.subHeading}>AI Assistant</Text>
+          <Text style={style.subHeading}>{subTitle}</Text>
         </LinearTextGradient>
 
-        <Text style={style.description}>
-          VoaisAI can answer for followup {'\n'}questions and be your advisor
-        </Text>
+        <Text style={style.description}>{desc}</Text>
       </View>
     </View>
   );
@@ -57,15 +49,7 @@ const Home = () => {
 export const OpenAI = () => {
   return (
     <View style={{flex: 1, width}}>
-      <Image
-        source={OpenAi}
-        style={{
-          width: responsiveScreenWidth(60),
-          height: responsiveScreenWidth(60),
-          alignSelf: 'center',
-          marginVertical: responsiveScreenWidth(20),
-        }}
-      />
+      <Image source={OpenAi} style={style.image} />
 
       <View style={style.textWrapper}>
         <LinearTextGradient
@@ -85,7 +69,7 @@ export const OpenAI = () => {
           colors={[primary2[500], primary2[100]]}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}>
-          <Text style={style.subHeading}>ChatGPT and DALL·E</Text>
+          <Text style={style.subHeading}>(ChatGPT and DALL·E)</Text>
         </LinearTextGradient>
 
         <Text style={style.description}>
@@ -100,21 +84,13 @@ export const OpenAI = () => {
 export const TTS = () => {
   return (
     <View style={{flex: 1, width}}>
-      <Image
-        source={Bot}
-        style={{
-          width: responsiveScreenWidth(60),
-          height: responsiveScreenWidth(60),
-          alignSelf: 'center',
-          marginVertical: responsiveScreenWidth(20),
-        }}
-      />
+      <Image source={Bot} style={style.image} />
       <View style={style.textWrapper}>
         <LinearTextGradient
           numberOfLines={1}
           useViewFrame={true}
           locations={[0, 1]}
-          colors={[primary[500], primary2[100]]}
+          colors={[primary2[500], primary2[100]]}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}>
           <Text style={style.heading}>Voice Search &</Text>
@@ -155,8 +131,14 @@ const style = StyleSheet.create({
   },
   description: {
     fontSize: fontsize.medium,
-    fontWeight: '700',
+    fontWeight: '300',
     marginTop: responsiveScreenHeight(2),
   },
+  image: {
+    width: responsiveScreenWidth(60),
+    height: responsiveScreenWidth(60),
+    alignSelf: 'center',
+    marginVertical: responsiveScreenWidth(20),
+  },
 });
-export default Home;
+export default Onboardingscreen;
