@@ -19,6 +19,8 @@ import {LinearTextGradient} from 'react-native-text-gradient';
 import {fontsize} from '../../constants/fontsize';
 import Bot from '../../assets/images/bot.png';
 import OpenAi from '../../assets/images/open-ai.png';
+import VoiceSearch from '../../assets/images/voiceSearch.png';
+
 import Onboardingscreen from './onboardingPages';
 
 const {width} = Dimensions.get('window');
@@ -39,7 +41,7 @@ const slides = [
     page: 'openAi',
   },
   {
-    image: Bot,
+    image: VoiceSearch,
     title: 'Voice search &',
     subTitle: 'Read aloud',
     desc: 'Simply speak your query & get \nanswer into natural-sounding speech',
@@ -83,6 +85,7 @@ export default function Onboarding({navigation}) {
         showsHorizontalScrollIndicator={false}
         renderItem={({item}) => <Onboardingscreen item={item} />}
         contentContainerStyle={{}}
+        initialNumToRender={1}
       />
 
       <View style={styles.footerWrapper}>
