@@ -1,7 +1,6 @@
 import React, {useRef, useState} from 'react';
 import {
   View,
-  Text,
   SafeAreaView,
   Dimensions,
   StatusBar,
@@ -15,13 +14,13 @@ import {
   responsiveScreenWidth,
 } from 'react-native-responsive-dimensions';
 import LandingPage, {OpenAI, TTS} from './onboardingPages';
-import {LinearTextGradient} from 'react-native-text-gradient';
 import {fontsize} from '../../constants/fontsize';
 import Bot from '../../assets/images/bot.png';
 import OpenAi from '../../assets/images/open-ai.png';
 import VoiceSearch from '../../assets/images/voiceSearch.png';
 
 import Onboardingscreen from './onboardingPages';
+import {GradientText} from '../../commonComponents.js/GradientText';
 
 const {width} = Dimensions.get('window');
 
@@ -36,7 +35,7 @@ const slides = [
   {
     image: OpenAi,
     title: 'Integrated with OpenAI',
-    subTitle: '(ChatGPT and DALL·E)',
+    subTitle: '(ChatGPT & DALL·E)',
     desc: 'For answering all the question & \nto create image from a description',
     page: 'openAi',
   },
@@ -91,15 +90,11 @@ export default function Onboarding({navigation}) {
       <View style={styles.footerWrapper}>
         <Indicator currentSlide={currentSlide} />
         <TouchableOpacity onPress={handleNextClick}>
-          <LinearTextGradient
-            numberOfLines={1}
-            useViewFrame={true}
-            locations={[0, 1]}
-            colors={[primary2[500], primary2[100]]}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}>
-            <Text style={styles.nextCTA}>Next</Text>
-          </LinearTextGradient>
+          <GradientText
+            style={styles.nextCTA}
+            colors={[primary2[500], primary2[100]]}>
+            Next
+          </GradientText>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -127,22 +122,6 @@ const Indicator = ({currentSlide}) => {
     </View>
   );
 };
-
-function Slide({item}) {
-  switch (item.page) {
-    case 'landingPage':
-      return <LandingPage data={item} />;
-
-    case 'openAi':
-      return <OpenAI data={item} />;
-
-    case 'tts':
-      return <TTS data={item} />;
-
-    default:
-      return <></>;
-  }
-}
 
 const styles = StyleSheet.create({
   safeAreaView: {flex: 1, backgroundColor: secondary[500]},

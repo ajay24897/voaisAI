@@ -1,14 +1,12 @@
 import {View, Text, Dimensions, StyleSheet, Animated} from 'react-native';
 import React from 'react';
-
-import {LinearTextGradient} from 'react-native-text-gradient';
-
 import {
   responsiveScreenHeight,
   responsiveScreenWidth,
 } from 'react-native-responsive-dimensions';
 import {fontsize} from '../../constants/fontsize';
-import {primary2} from '../../constants/color';
+import {grey, primary2} from '../../constants/color';
+import {GradientText} from '../../commonComponents.js/GradientText';
 
 const {width} = Dimensions.get('window');
 
@@ -19,25 +17,16 @@ const Onboardingscreen = ({item}) => {
     <View style={{flex: 1, width, padding: responsiveScreenWidth(2)}}>
       <Animated.Image source={image} style={style.image} />
       <View style={style.textWrapper}>
-        <LinearTextGradient
-          numberOfLines={1}
-          useViewFrame={true}
-          locations={[0, 1]}
-          colors={[primary2[500], primary2[100]]}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}>
-          <Text style={style.heading}>{title}</Text>
-        </LinearTextGradient>
-
-        <LinearTextGradient
-          numberOfLines={1}
-          useViewFrame={true}
-          locations={[0, 1]}
-          colors={[primary2[500], primary2[100]]}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}>
-          <Text style={style.subHeading}>{subTitle}</Text>
-        </LinearTextGradient>
+        <GradientText
+          style={style.heading}
+          colors={[primary2[500], primary2[100]]}>
+          {title}
+        </GradientText>
+        <GradientText
+          style={style.heading}
+          colors={[primary2[500], primary2[100]]}>
+          {subTitle}
+        </GradientText>
 
         <Text style={style.description}>{desc}</Text>
       </View>
@@ -63,6 +52,8 @@ const style = StyleSheet.create({
     fontSize: fontsize.medium,
     fontWeight: '300',
     marginTop: responsiveScreenHeight(2),
+    color: grey[200],
+    letterSpacing: 2,
   },
   image: {
     width: responsiveScreenWidth(60),

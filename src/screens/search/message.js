@@ -72,7 +72,9 @@ function Message({mes}) {
             alt="image can not load">
             {imageLoading && <ActivityIndicator />}
             {hasImageLoadError && (
-              <Text style={{textAlign: 'center'}}>Sorry, no image found</Text>
+              <Text style={{textAlign: 'center', color: grey[200]}}>
+                Sorry, no image found
+              </Text>
             )}
           </ImageBackground>
         </LinearGradient>
