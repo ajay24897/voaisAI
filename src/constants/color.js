@@ -19,7 +19,7 @@ export const primary2 = {
 };
 
 export const secondary = {
-  500: '#191e28',
+  500: '#0c0c0c',
   300: '#1e232d',
   400: '#282c38',
 };

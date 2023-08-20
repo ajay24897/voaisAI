@@ -13,11 +13,10 @@ import {
   responsiveScreenHeight,
   responsiveScreenWidth,
 } from 'react-native-responsive-dimensions';
-import LandingPage, {OpenAI, TTS} from './onboardingPages';
 import {fontsize} from '../../constants/fontsize';
 import Bot from '../../assets/images/bot.png';
 import OpenAi from '../../assets/images/open-ai.png';
-import VoiceSearch from '../../assets/images/voiceSearch.png';
+import VoiceSearch from '../../assets/images/voiceSearch2.png';
 
 import Onboardingscreen from './onboardingPages';
 import {GradientText} from '../../commonComponents.js/GradientText';
@@ -42,7 +41,7 @@ const slides = [
   {
     image: VoiceSearch,
     title: 'Voice search &',
-    subTitle: 'Read aloud',
+    subTitle: 'Read aloud feature',
     desc: 'Simply speak your query & get \nanswer into natural-sounding speech',
     page: 'tts',
   },

@@ -1,5 +1,5 @@
 const {default: LinearGradient} = require('react-native-linear-gradient');
-import {grey, primary, primary2, secondary} from '../../constants/color';
+import {grey, primary2, secondary} from '../../constants/color';
 import {
   StyleSheet,
   Text,
@@ -58,23 +58,18 @@ function Message({mes}) {
               setHasImageLoadError(true);
               setImageLoading(false);
             }}
-            imageStyle={{borderRadius: 20}}
+            imageStyle={style.borderRadius}
             onLoad={() => setImageLoading(false)}
             source={{uri: mes.content}}
             // source={{
             //   uri: 'https://images.pexels.com/photos/699466/pexels-photo-699466.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
             // }}
             resizeMode="cover"
-            style={[
-              style.image,
-              {justifyContent: 'center', alignItems: 'center'},
-            ]}
+            style={style.image}
             alt="image can not load">
             {imageLoading && <ActivityIndicator />}
             {hasImageLoadError && (
-              <Text style={{textAlign: 'center', color: grey[200]}}>
-                Sorry, no image found
-              </Text>
+              <Text style={style.couldNotLoadText}>Image couldn't load</Text>
             )}
           </ImageBackground>
         </LinearGradient>
@@ -136,6 +131,8 @@ const style = StyleSheet.create({
     height: responsiveScreenHeight(20),
     width: responsiveScreenHeight(20),
     borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   textView: {
     marginVertical: responsiveScreenHeight(0.5),
@@ -165,4 +162,6 @@ const style = StyleSheet.create({
     alignSelf: 'flex-start',
     borderTopLeftRadius: 0,
   },
+  borderRadius: {borderRadius: 20},
+  couldNotLoadText: {textAlign: 'center', color: grey[200]},
 });

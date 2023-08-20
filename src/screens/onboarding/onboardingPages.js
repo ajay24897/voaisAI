@@ -14,8 +14,12 @@ const Onboardingscreen = ({item}) => {
   console.log(item);
   const {image, title, subTitle, desc} = item;
   return (
-    <View style={{flex: 1, width, padding: responsiveScreenWidth(2)}}>
-      <Animated.Image source={image} style={style.image} />
+    <View style={style.wrapper}>
+      <Animated.Image
+        source={image}
+        style={style.image}
+        resizeMode={'contain'}
+      />
       <View style={style.textWrapper}>
         <GradientText
           style={style.heading}
@@ -35,6 +39,7 @@ const Onboardingscreen = ({item}) => {
 };
 
 const style = StyleSheet.create({
+  wrapper: {flex: 1, width, padding: responsiveScreenWidth(2)},
   textWrapper: {
     flex: 1,
     justifyContent: 'center',
@@ -56,7 +61,7 @@ const style = StyleSheet.create({
     letterSpacing: 2,
   },
   image: {
-    width: responsiveScreenWidth(60),
+    width: responsiveScreenWidth(100),
     height: responsiveScreenWidth(60),
     alignSelf: 'center',
     marginVertical: responsiveScreenWidth(20),
