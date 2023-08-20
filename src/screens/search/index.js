@@ -54,7 +54,9 @@ export default function Search() {
   const onSpeechError = e => {
     setIsRecordig(false);
     if (e.error.message) {
-      ToastAndroid.show(e.error.message, 1500);
+      if (Platform.OS === 'android') {
+        ToastAndroid.show(e.error.message, 1500);
+      }
     }
     console.log('onSpeechError', e);
   };
@@ -97,7 +99,9 @@ export default function Search() {
             startSpeech(res.data[res.data.length - 1]);
           } else {
             if (res.msg) {
-              ToastAndroid.show(res.msg, 1500);
+              if (Platform.OS === 'android') {
+                ToastAndroid.show(res.msg, 1500);
+              }
             }
           }
         })
@@ -170,7 +174,9 @@ export default function Search() {
           renderItem={({item}) => <Message mes={item} />}
           ListFooterComponent={
             isLoading && (
-              <ActivityIndicator size={'large'} color={primary2[900]} />
+              <View style={{marginVertical: responsiveScreenHeight(1)}}>
+                <ActivityIndicator size={'large'} color={primary2[900]} />
+              </View>
             )
           }
         />
@@ -306,20 +312,52 @@ const style = StyleSheet.create({
   },
 });
 
-const dummyRes = [
-  {content: 'how many legs do cow have', role: 'user'},
-  {content: 'A cow has four legs.', role: 'assistant'},
-  {content: 'best place to visit in Mumbai', role: 'user'},
-  {content: 'image of cow', role: 'user'},
-  {
-    content:
-      'https://oaidalleapiprodscus.blob.core.windows.net/private/org-O9DYCkYkwKEHhVKBHibYkIs8/user-xTE8gDGvaoLkCMd4JvX3jH5z/img-GfwmQYhB08Beja757FgoFgEN.png?st=2023-08-05T16%3A24%3A07Z&se=2023-08-05T18%3A24%3A07Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-08-05T11%3A46%3A32Z&ske=2023-08-06T11%3A46%3A32Z&sks=b&skv=2021-08-06&sig=cY7GBt59NbkBqJHsQQttAownIuShw4pl59uxaG6tLII%3D',
-    role: 'assistant',
-  },
-  {
-    content:
-      'Choosing the best Reebok shoes depends on your personal preferences, activities, and needs. Here are some popular and highly recommended Reebok shoe models 1. Reebok Nano X: These shoes are designed for cross-training and are known for their durability and versatility.2. Reebok Classic Leather: A timeless and iconic sneaker that offers both style and comfort. Its great for casual wear.3. Reebok Floatride Run: Ideal for running, these shoes provide excellent cushioning and responsiveness for a smooth and comfortable ride',
+const dummyRes = [{content: 'Hi👋🏻, how can I help you?', role: 'assistant'}];
 
-    role: 'assistant',
-  },
-];
+// const dummyRes = [
+//   {content: 'how many legs do cow have', role: 'user'},
+//   {content: 'A cow has four legs.', role: 'assistant'},
+//   {content: 'best place to visit in Mumbai', role: 'user'},
+//   {content: 'image of cow', role: 'user'},
+//   {
+//     content:
+//       'https://oaidalleapiprodscus.blob.core.windows.net/private/org-O9DYCkYkwKEHhVKBHibYkIs8/user-xTE8gDGvaoLkCMd4JvX3jH5z/img-GfwmQYhB08Beja757FgoFgEN.png?st=2023-08-05T16%3A24%3A07Z&se=2023-08-05T18%3A24%3A07Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-08-05T11%3A46%3A32Z&ske=2023-08-06T11%3A46%3A32Z&sks=b&skv=2021-08-06&sig=cY7GBt59NbkBqJHsQQttAownIuShw4pl59uxaG6tLII%3D',
+//     role: 'assistant',
+//   },
+//   {
+//     content:
+//       'Choosing the best Reebok shoes depends on your personal preferences, activities, and needs. Here are some popular and highly recommended Reebok shoe models 1. Reebok Nano X: These shoes are designed for cross-training and are known for their durability and versatility.2. Reebok Classic Leather: A timeless and iconic sneaker that offers both style and comfort. Its great for casual wear.3. Reebok Floatride Run: Ideal for running, these shoes provide excellent cushioning and responsiveness for a smooth and comfortable ride',
+
+//     role: 'assistant',
+//   },
+//   {content: 'how many legs do cow have', role: 'user'},
+//   {content: 'A cow has four legs.', role: 'assistant'},
+//   {content: 'best place to visit in Mumbai', role: 'user'},
+//   {content: 'image of cow', role: 'user'},
+//   {
+//     content:
+//       'https://oaidalleapiprodscus.blob.core.windows.net/private/org-O9DYCkYkwKEHhVKBHibYkIs8/user-xTE8gDGvaoLkCMd4JvX3jH5z/img-GfwmQYhB08Beja757FgoFgEN.png?st=2023-08-05T16%3A24%3A07Z&se=2023-08-05T18%3A24%3A07Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-08-05T11%3A46%3A32Z&ske=2023-08-06T11%3A46%3A32Z&sks=b&skv=2021-08-06&sig=cY7GBt59NbkBqJHsQQttAownIuShw4pl59uxaG6tLII%3D',
+//     role: 'assistant',
+//   },
+//   {
+//     content:
+//       'Choosing the best Reebok shoes depends on your personal preferences, activities, and needs. Here are some popular and highly recommended Reebok shoe models 1. Reebok Nano X: These shoes are designed for cross-training and are known for their durability and versatility.2. Reebok Classic Leather: A timeless and iconic sneaker that offers both style and comfort. Its great for casual wear.3. Reebok Floatride Run: Ideal for running, these shoes provide excellent cushioning and responsiveness for a smooth and comfortable ride',
+
+//     role: 'assistant',
+//   },
+//   {content: 'how many legs do cow have', role: 'user'},
+//   {content: 'A cow has four legs.', role: 'assistant'},
+//   {content: 'best place to visit in Mumbai', role: 'user'},
+//   {content: 'image of cow', role: 'user'},
+//   {
+//     content:
+//       'https://oaidalleapiprodscus.blob.core.windows.net/private/org-O9DYCkYkwKEHhVKBHibYkIs8/user-xTE8gDGvaoLkCMd4JvX3jH5z/img-GfwmQYhB08Beja757FgoFgEN.png?st=2023-08-05T16%3A24%3A07Z&se=2023-08-05T18%3A24%3A07Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-08-05T11%3A46%3A32Z&ske=2023-08-06T11%3A46%3A32Z&sks=b&skv=2021-08-06&sig=cY7GBt59NbkBqJHsQQttAownIuShw4pl59uxaG6tLII%3D',
+//     role: 'assistant',
+//   },
+//   {
+//     content:
+//       'Choosing the best Reebok shoes depends on your personal preferences, activities, and needs. Here are some popular and highly recommended Reebok shoe models 1. Reebok Nano X: These shoes are designed for cross-training and are known for their durability and versatility.2. Reebok Classic Leather: A timeless and iconic sneaker that offers both style and comfort. Its great for casual wear.3. Reebok Floatride Run: Ideal for running, these shoes provide excellent cushioning and responsiveness for a smooth and comfortable ride',
+
+//     role: 'assistant',
+//   },
+// ];

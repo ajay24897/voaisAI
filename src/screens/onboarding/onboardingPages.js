@@ -1,5 +1,5 @@
 import {View, Text, Dimensions, StyleSheet, Animated} from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import {
   responsiveScreenHeight,
   responsiveScreenWidth,
@@ -11,7 +11,6 @@ import {GradientText} from '../../commonComponents.js/GradientText';
 const {width} = Dimensions.get('window');
 
 const Onboardingscreen = ({item}) => {
-  console.log(item);
   const {image, title, subTitle, desc} = item;
   return (
     <View style={style.wrapper}>
@@ -67,4 +66,4 @@ const style = StyleSheet.create({
     marginVertical: responsiveScreenWidth(20),
   },
 });
-export default Onboardingscreen;
+export default memo(Onboardingscreen);

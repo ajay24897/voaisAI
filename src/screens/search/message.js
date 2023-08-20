@@ -26,12 +26,12 @@ function Message({mes}) {
     Animated.parallel([
       Animated.timing(animation[0], {
         toValue: 0,
-        duration: 300,
+        duration: 200,
         useNativeDriver: true,
       }),
       Animated.timing(opacity[0], {
         toValue: 1,
-        duration: 2000,
+        duration: 1000,
         useNativeDriver: true,
       }),
     ]).start();
