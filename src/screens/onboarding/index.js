@@ -92,7 +92,7 @@ export default function Onboarding({navigation}) {
           <GradientText
             style={styles.nextCTA}
             colors={[primary2[500], primary2[100]]}>
-            Next
+            {currentSlide === slides.length - 1 ? "Let's Start" : 'Next'}
           </GradientText>
         </TouchableOpacity>
       </View>

@@ -98,14 +98,24 @@ export default function Search() {
             setMessages([...res.data]);
             startSpeech(res.data[res.data.length - 1]);
           } else {
+            console.log('ereder', res);
             if (res.msg) {
               if (Platform.OS === 'android') {
-                ToastAndroid.show(res.msg, 1500);
+                let error = res.msg;
+                if (res.msg.includes('401')) {
+                  error = 'Invalid API key for Open AI';
+                } else {
+                  error = 'Something went wrong';
+                }
+                ToastAndroid.show(error, 1500);
               }
             }
           }
         })
-        .catch(() => setIsLoading(false));
+        .catch(error => {
+          console.log('err', error);
+          setIsLoading(false);
+        });
     }
   };
 
@@ -184,7 +194,7 @@ export default function Search() {
 
       <View style={style.flexRowSpaceArround}>
         <View style={style.CTAView}>
-          {!!messages.length && (
+          {messages.length > 1 && (
             <LinearGradient
               colors={[secondary[300], secondary[400]]}
               start={{x: 0, y: 0}}
@@ -220,7 +230,7 @@ export default function Search() {
           )}
         </View>
         <View style={style.CTAView}>
-          {!isSpeaking && (
+          {isSpeaking && (
             <LinearGradient
               colors={[primary2[700], primary2[800], primary2[900]]}
               start={{x: 0, y: 0}}
