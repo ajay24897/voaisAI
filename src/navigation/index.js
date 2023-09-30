@@ -21,8 +21,6 @@ function Navigation() {
           component={Search}
           options={{headerShown: false}}
         />
-
-        {}
       </Stack.Navigator>
     </NavigationContainer>
   );

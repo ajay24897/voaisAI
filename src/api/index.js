@@ -1,12 +1,13 @@
 import axios from 'axios';
 
-let apiKey = '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';
-// let apiKey = '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';
-// let apiKey = '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';
+// let apiKey = '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';
+let apiKey = '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';
+// let apiKey = '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';
 const client = axios.create({
   headers: {
     Authorization: 'Bearer ' + apiKey,
     'Content-Type': 'application/json',
+    timeout: 30000,
   },
 });
 
@@ -14,7 +15,6 @@ const chatgptUrl = 'https://api.openai.com/v1/chat/completions';
 const dalleUrl = 'https://api.openai.com/v1/images/generations';
 
 export const apiCall = async (prompt, messages) => {
-  // // Logic 1 : this will check the prompt from chatgpt if user wants to create an image
   try {
     const res = await client.post(chatgptUrl, {
       model: 'gpt-3.5-turbo',

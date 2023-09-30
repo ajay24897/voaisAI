@@ -10,6 +10,7 @@ import {
   FlatList,
   ActivityIndicator,
   ToastAndroid,
+  Linking,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import Voice from '@react-native-community/voice';
@@ -25,6 +26,8 @@ import {grey, primary2, secondary} from '../../constants/color';
 import Message from './message';
 import voice from '../../assets/voice.png';
 import voiceGif from '../../assets/recording.gif';
+import Toast from '../../commonComponents.js/toast';
+import Bot from '../../assets/images/bot.png';
 
 export default function Search() {
   const [messages, setMessages] = useState(dummyRes);
@@ -33,7 +36,7 @@ export default function Search() {
   const [result, setResult] = useState('');
   const flatlistRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
-
+  const ref = useRef();
   const onSpeechStartHandler = () => {
     setIsRecordig(true);
   };
@@ -54,9 +57,7 @@ export default function Search() {
   const onSpeechError = e => {
     setIsRecordig(false);
     if (e.error.message) {
-      if (Platform.OS === 'android') {
-        ToastAndroid.show(e.error.message, 1500);
-      }
+      ref.current.toast(e.error.message);
     }
     console.log('onSpeechError', e);
   };
@@ -65,6 +66,7 @@ export default function Search() {
     try {
       setIsRecordig(false);
       await Voice.stop();
+      await Voice.destroy();
       getAiResponse();
     } catch (e) {
       console.log('stopRecoding', e);
@@ -89,7 +91,6 @@ export default function Search() {
       newMsg.push({role: 'user', content: result.trim()});
       setMessages([...newMsg]);
       setIsLoading(true);
-      console.log('result.trim()', result.trim());
       apiCall(result.trim(), newMsg)
         .then(res => {
           setIsLoading(false);
@@ -100,15 +101,15 @@ export default function Search() {
           } else {
             console.log('ereder', res);
             if (res.msg) {
-              if (Platform.OS === 'android') {
-                let error = res.msg;
-                if (res.msg.includes('401')) {
-                  error = 'Invalid API key for Open AI';
-                } else {
-                  error = 'Something went wrong';
-                }
-                ToastAndroid.show(error, 1500);
+              let error = res.msg;
+              if (res.msg.includes('401')) {
+                error = 'Invalid API key';
+              } else if (res.msg.includes('Network Error')) {
+                error = 'Please check your internet connection';
+              } else {
+                error = 'Request failed, Please try again later';
               }
+              ref.current.toast(error);
             }
           }
         })
@@ -175,7 +176,12 @@ export default function Search() {
 
   return (
     <SafeAreaView style={[style.wrapper, {backgroundColor: secondary[500]}]}>
+      <Toast ref={ref} />
       <StatusBar backgroundColor={secondary[500]} />
+      <View>
+        <Image source={Bot} style={style.botImage} resizeMode={'contain'} />
+      </View>
+
       <View style={style.wrapper}>
         <FlatList
           ref={flatlistRef}
@@ -319,6 +325,12 @@ const style = StyleSheet.create({
   },
   with50: {
     width: '50%',
+  },
+  botImage: {
+    width: 80,
+    height: 80,
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
 });
 
