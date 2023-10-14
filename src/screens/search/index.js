@@ -9,8 +9,7 @@ import {
   StatusBar,
   FlatList,
   ActivityIndicator,
-  ToastAndroid,
-  Linking,
+  BackHandler,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import Voice from '@react-native-community/voice';
@@ -37,6 +36,34 @@ export default function Search() {
   const flatlistRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
   const ref = useRef();
+
+  const handleBackButton = () => {
+    BackHandler.exitApp();
+  };
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
+  }, []);
+
+  useEffect(() => {
+    Voice.onSpeechStart = onSpeechStartHandler;
+    Voice.onSpeechEnd = onSpeechEndHandler;
+    Voice.onSpeechResults = onSpeechResultsHandler;
+    Voice.onSpeechError = onSpeechError;
+
+    Tts.addEventListener('tts-start', event => {
+      setIsSpeaking(true);
+    });
+    Tts.addEventListener('tts-finish', event => {
+      setIsSpeaking(false);
+    });
+    Tts.addEventListener('tts-cancel', event => console.log('cancel', event));
+
+    return () => Voice.destroy().then(Voice.removeAllListeners);
+  }, []);
+
   const onSpeechStartHandler = () => {
     setIsRecordig(true);
   };
@@ -45,29 +72,42 @@ export default function Search() {
   };
 
   const onSpeechResultsHandler = e => {
-    setResult(e.value[0]);
+    console.log(e.value);
+    // setResult(e.value[0]);
+    let newMsg = [];
+    // newMsg.push({role: 'user', content: e.value[0]});
+    setMessages(prev => {
+      if (prev) {
+        newMsg = [...prev, {role: 'user', content: e.value[0]}];
+        return newMsg;
+      }
+    });
+    stopRecoding([...newMsg]);
   };
 
   useEffect(() => {
     if (Platform.OS === 'android') {
-      stopRecoding();
+      // stopRecoding();
     }
   }, [result]);
 
   const onSpeechError = e => {
     setIsRecordig(false);
-    if (e.error.message) {
+    if (e.error.message.includes('7/No match')) {
+      ref.current.toast('Please say your query');
+    } else {
       ref.current.toast(e.error.message);
     }
     console.log('onSpeechError', e);
   };
 
-  const stopRecoding = async () => {
+  const stopRecoding = async msg => {
+    console.log('oijiooo', msg);
     try {
       setIsRecordig(false);
       await Voice.stop();
-      await Voice.destroy();
-      getAiResponse();
+      await Voice.destroy().then(Voice.removeAllListeners);
+      await getAiResponse([...msg]);
     } catch (e) {
       console.log('stopRecoding', e);
     }
@@ -85,11 +125,11 @@ export default function Search() {
     }
   };
 
-  const getAiResponse = () => {
-    if (result.trim().length > 0) {
-      let newMsg = [...messages];
-      newMsg.push({role: 'user', content: result.trim()});
-      setMessages([...newMsg]);
+  const getAiResponse = async newMsg => {
+    if (newMsg) {
+      // let newMsg = [...messages];
+      // newMsg.push({role: 'user', content: result.trim()});
+      // setMessages([...newMsg]);
       setIsLoading(true);
       apiCall(result.trim(), newMsg)
         .then(res => {
@@ -156,23 +196,6 @@ export default function Search() {
     Tts.stop();
     setIsSpeaking(false);
   };
-
-  useEffect(() => {
-    Voice.onSpeechStart = onSpeechStartHandler;
-    Voice.onSpeechEnd = onSpeechEndHandler;
-    Voice.onSpeechResults = onSpeechResultsHandler;
-    Voice.onSpeechError = onSpeechError;
-
-    Tts.addEventListener('tts-start', event => {
-      setIsSpeaking(true);
-    });
-    Tts.addEventListener('tts-finish', event => {
-      setIsSpeaking(false);
-    });
-    Tts.addEventListener('tts-cancel', event => console.log('cancel', event));
-
-    return () => Voice.destroy().then(Voice.removeAllListeners);
-  }, []);
 
   return (
     <SafeAreaView style={[style.wrapper, {backgroundColor: secondary[500]}]}>
@@ -300,7 +323,6 @@ const style = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 100,
-    overlayColor: 'rgb(25,30,40)',
   },
   userText: {
     borderTopRightRadius: 0,
