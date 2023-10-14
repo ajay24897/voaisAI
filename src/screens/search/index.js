@@ -94,7 +94,7 @@ export default function Search() {
   const onSpeechError = e => {
     setIsRecordig(false);
     if (e.error.message.includes('7/No match')) {
-      ref.current.toast('Please say your query');
+      ref.current.toast('Unable to recognize your voice');
     } else {
       ref.current.toast(e.error.message);
     }
