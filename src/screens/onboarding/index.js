@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   SafeAreaView,
@@ -7,6 +7,7 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  BackHandler,
 } from 'react-native';
 import {commonColors, grey, primary2, secondary} from '../../constants/color';
 import {
@@ -51,6 +52,16 @@ export default function Onboarding({navigation}) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const flatListRef = useRef(null);
 
+  const handleBackButton = () => {
+    BackHandler.exitApp();
+  };
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
+  }, []);
+
   const handleSlide = e => {
     const xOffset = e.nativeEvent.contentOffset.x;
     setCurrentSlide(Math.round(xOffset / width));
@@ -68,7 +79,7 @@ export default function Onboarding({navigation}) {
 
   const OnboardingFlowDone = async () => {
     // dispatch(onboardingDone());
-    navigation.replace('search');
+    navigation.push('search');
   };
 
   return (

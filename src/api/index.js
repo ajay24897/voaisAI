@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 // let apiKey = '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';
-let apiKey = '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';
-// let apiKey = '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';
+// let apiKey = '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';
+let apiKey = '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';
 const client = axios.create({
   headers: {
     Authorization: 'Bearer ' + apiKey,
