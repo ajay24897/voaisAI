@@ -6,6 +6,10 @@ import {
   Linking,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import React, {useState} from 'react';
 import {grey, primary2, secondary} from '../../constants/color';
@@ -23,79 +27,86 @@ const AddKeyModal = props => {
   console.log('apiKey', apiKey);
   return (
     <Modal animationType="slide" transparent={true} visible={true}>
-      <View style={style.container}>
-        <View style={style.contentContainer}>
-          <View style={{marginHorizontal: responsiveScreenWidth(4)}}>
-            <Text style={style.headerText}>Add OpenAI API key</Text>
+      <KeyboardAvoidingView
+        on
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{flex: 1}}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View style={style.container} onPress={() => Keyboard.dismiss()}>
+            <View style={style.contentContainer}>
+              <View style={{marginHorizontal: responsiveScreenWidth(4)}}>
+                <Text style={style.headerText}>Add OpenAI API key</Text>
+                <Text style={{color: grey[300]}}>
+                  An API key is required to use the OpenAI API, which allows to
+                  access the functionality and data of the OpenAI platform.
+                  {'\n'}
+                  {'\n'}
+                  Click on below link and generate key
+                </Text>
 
-            <Text style={{color: grey[300]}}>
-              API keys are unique identifiers that are used to authenticate and
-              authorize access to a specific API.An API key is required to use
-              the OpenAI API, which allows to access the functionality and data
-              of the OpenAI platform.{'\n'}
-              {'\n'}
-              Click on below link and generate key
-            </Text>
+                <Text
+                  style={style.linkText}
+                  onPress={() =>
+                    Linking.openURL(
+                      'https://platform.openai.com/account/api-keys',
+                    )
+                  }>
+                  https://platform.openai.com/account/api-keys
+                </Text>
 
-            <Text
-              style={style.linkText}
-              onPress={() =>
-                Linking.openURL('https://platform.openai.com/account/api-keys')
-              }>
-              https://platform.openai.com/account/api-keys
-            </Text>
+                <Text style={{color: grey[300]}}>
+                  {'\n'}
+                  Once Api key get's genrated, add key below and Submit
+                </Text>
 
-            <Text style={{color: grey[300]}}>
-              {'\n'}
-              Once Api key get's genrated, add key below and Submit
-            </Text>
-
-            <TextInput
-              style={style.input}
-              placeholderTextColor={grey[100]}
-              value={apiKey}
-              onChangeText={text => setApiKey(text)}
-              placeholder="Add Api key here"
-            />
+                <TextInput
+                  style={style.input}
+                  placeholderTextColor={grey[100]}
+                  value={apiKey}
+                  onChangeText={text => setApiKey(text)}
+                  placeholder="Add Api key here"
+                />
+              </View>
+              <View style={style.CTAView}>
+                <TouchableOpacity
+                  style={[
+                    style.textView,
+                    {
+                      marginVertical: responsiveScreenHeight(2),
+                      marginHorizontal: responsiveScreenWidth(2),
+                    },
+                  ]}
+                  onPress={handleModalCallback}>
+                  <LinearGradient
+                    colors={[secondary[300], secondary[400]]}
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 0}}
+                    style={[style.textView]}>
+                    <Text style={style.CTAtext}>Cancle</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    style.textView,
+                    {
+                      marginVertical: responsiveScreenHeight(2),
+                      marginHorizontal: responsiveScreenWidth(2),
+                    },
+                  ]}
+                  onPress={() => handleModalCallback(apiKey)}>
+                  <LinearGradient
+                    colors={[primary2[700], primary2[800], primary2[900]]}
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 0}}
+                    style={[style.textView]}>
+                    <Text style={style.CTAtext}>Submit </Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
-          <View style={style.CTAView}>
-            <TouchableOpacity
-              style={[
-                style.textView,
-                {
-                  marginVertical: responsiveScreenHeight(2),
-                  marginHorizontal: responsiveScreenWidth(2),
-                },
-              ]}
-              onPress={handleModalCallback}>
-              <LinearGradient
-                colors={[secondary[300], secondary[400]]}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}
-                style={[style.textView]}>
-                <Text style={style.CTAtext}>Cancle</Text>
-              </LinearGradient>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                style.textView,
-                {
-                  marginVertical: responsiveScreenHeight(2),
-                  marginHorizontal: responsiveScreenWidth(2),
-                },
-              ]}
-              onPress={() => handleModalCallback(apiKey)}>
-              <LinearGradient
-                colors={[primary2[700], primary2[800], primary2[900]]}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}
-                style={[style.textView]}>
-                <Text style={style.CTAtext}>Submit </Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };

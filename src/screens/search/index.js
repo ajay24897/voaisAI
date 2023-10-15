@@ -147,7 +147,7 @@ export default function Search(props) {
             if (res.msg) {
               let error = res.msg;
               if (res.msg.includes('401')) {
-                error = 'Invalid API key, Click on `Add new Key`';
+                error = 'API key expired or invalid, Click on `Add new Key`';
               } else if (res.msg.includes('Network Error')) {
                 error = 'Please check your internet connection';
               } else {

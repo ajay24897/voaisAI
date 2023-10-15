@@ -50,7 +50,7 @@ const Toast = forwardRef((props, ref) => {
 const style = StyleSheet.create({
   conatiner: {
     position: 'absolute',
-    bottom: 100,
+    bottom: 150,
     zIndex: 100,
     left: 0,
     right: 0,
@@ -64,7 +64,7 @@ const style = StyleSheet.create({
     borderRadius: 100,
   },
   message: {
-    fontSize: fontsize.medium,
+    fontSize: fontsize.small,
     color: commonColors.white,
     textAlign: 'center',
   },
