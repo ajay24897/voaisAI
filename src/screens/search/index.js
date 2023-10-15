@@ -27,14 +27,16 @@ import voice from '../../assets/voice.png';
 import voiceGif from '../../assets/recording.gif';
 import Toast from '../../commonComponents.js/toast';
 import Bot from '../../assets/images/bot.png';
+import AddKeyModal from './AddKeyModal';
 
-export default function Search() {
+export default function Search(props) {
   const [messages, setMessages] = useState(dummyRes);
   const [isRecording, setIsRecordig] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [result, setResult] = useState('');
   const flatlistRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
+  const [showAddKeyModal, setShowAddKeyModal] = useState(true);
   const ref = useRef();
 
   const handleBackButton = () => {
@@ -73,21 +75,12 @@ export default function Search() {
 
   const onSpeechResultsHandler = e => {
     console.log(e.value);
-    // setResult(e.value[0]);
-    let newMsg = [];
-    // newMsg.push({role: 'user', content: e.value[0]});
-    setMessages(prev => {
-      if (prev) {
-        newMsg = [...prev, {role: 'user', content: e.value[0]}];
-        return newMsg;
-      }
-    });
-    stopRecoding([...newMsg]);
+    setResult(e.value[0]);
   };
 
   useEffect(() => {
     if (Platform.OS === 'android') {
-      // stopRecoding();
+      stopRecoding();
     }
   }, [result]);
 
@@ -101,13 +94,23 @@ export default function Search() {
     console.log('onSpeechError', e);
   };
 
-  const stopRecoding = async msg => {
-    console.log('oijiooo', msg);
+  // const stopRecoding = async msg => {
+  //   try {
+  //     setIsRecordig(false);
+  //     await Voice.stop();
+  //     await Voice.destroy().then(Voice.removeAllListeners);
+  //     await getAiResponse([...msg]);
+  //   } catch (e) {
+  //     console.log('stopRecoding', e);
+  //   }
+  // };
+
+  const stopRecoding = async () => {
     try {
       setIsRecordig(false);
       await Voice.stop();
       await Voice.destroy().then(Voice.removeAllListeners);
-      await getAiResponse([...msg]);
+      await getAiResponse();
     } catch (e) {
       console.log('stopRecoding', e);
     }
@@ -125,11 +128,11 @@ export default function Search() {
     }
   };
 
-  const getAiResponse = async newMsg => {
-    if (newMsg) {
-      // let newMsg = [...messages];
-      // newMsg.push({role: 'user', content: result.trim()});
-      // setMessages([...newMsg]);
+  const getAiResponse = async => {
+    if (result.trim().length > 0) {
+      let newMsg = [...messages];
+      newMsg.push({role: 'user', content: result.trim()});
+      setMessages([...newMsg]);
       setIsLoading(true);
       apiCall(result.trim(), newMsg)
         .then(res => {
@@ -201,8 +204,19 @@ export default function Search() {
     <SafeAreaView style={[style.wrapper, {backgroundColor: secondary[500]}]}>
       <Toast ref={ref} />
       <StatusBar backgroundColor={secondary[500]} />
-      <View>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginHorizontal: responsiveScreenWidth(2),
+          marginBottom: responsiveScreenHeight(1),
+        }}>
         <Image source={Bot} style={style.botImage} resizeMode={'contain'} />
+        <TouchableOpacity onPress={() => setShowAddKeyModal(prev => !prev)}>
+          <Text style={{color: grey[300], fontSize: fontsize.medium}}>
+            Add New Key
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <View style={style.wrapper}>
@@ -272,6 +286,9 @@ export default function Search() {
           )}
         </View>
       </View>
+      {showAddKeyModal && (
+        <AddKeyModal {...props} setModal={setShowAddKeyModal} />
+      )}
     </SafeAreaView>
   );
 }
@@ -349,9 +366,9 @@ const style = StyleSheet.create({
     width: '50%',
   },
   botImage: {
-    width: 80,
-    height: 80,
-    marginLeft: 'auto',
+    width: 60,
+    height: 60,
+    // marginLeft: 'auto',
     marginRight: 'auto',
   },
 });
