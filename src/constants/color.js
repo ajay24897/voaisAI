@@ -25,7 +25,7 @@ export const secondary = {
 };
 
 export const grey = {
-  100: ' #e1e1e1',
+  100: '#e1e1e1',
   200: '#cacaca',
   300: '#b4b4b4',
   400: '#9d9d9d',

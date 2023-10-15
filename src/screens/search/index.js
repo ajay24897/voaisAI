@@ -36,8 +36,9 @@ export default function Search(props) {
   const [result, setResult] = useState('');
   const flatlistRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
-  const [showAddKeyModal, setShowAddKeyModal] = useState(true);
+  const [showAddKeyModal, setShowAddKeyModal] = useState(false);
   const ref = useRef();
+  const [apiKey, setApiKey] = useState('');
 
   const handleBackButton = () => {
     BackHandler.exitApp();
@@ -146,7 +147,7 @@ export default function Search(props) {
             if (res.msg) {
               let error = res.msg;
               if (res.msg.includes('401')) {
-                error = 'Invalid API key';
+                error = 'Invalid API key, Click on `Add new Key`';
               } else if (res.msg.includes('Network Error')) {
                 error = 'Please check your internet connection';
               } else {
@@ -198,6 +199,14 @@ export default function Search(props) {
   const stopSpeaking = () => {
     Tts.stop();
     setIsSpeaking(false);
+  };
+
+  const handleModalCallback = key => {
+    if (key?.length > 0) {
+      setApiKey(key);
+      console.log('key', key);
+    }
+    setShowAddKeyModal(false);
   };
 
   return (
@@ -287,7 +296,7 @@ export default function Search(props) {
         </View>
       </View>
       {showAddKeyModal && (
-        <AddKeyModal {...props} setModal={setShowAddKeyModal} />
+        <AddKeyModal {...props} handleModalCallback={handleModalCallback} />
       )}
     </SafeAreaView>
   );
