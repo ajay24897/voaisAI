@@ -91,7 +91,7 @@ function Message({mes}) {
           )}
           {mes.content.length > 300 && mes.role === 'assistant' && (
             <Text style={style.text}>
-              {showFullMsg ? mes?.content : mes?.content.slice(0, 200)}
+              {showFullMsg ? mes?.content : mes?.content.slice(0, 225)}
               <Text
                 onPress={() => setShowFullMsg(pre => !pre)}
                 style={{color: primary2[800]}}>

@@ -66,7 +66,7 @@ const AddKeyModal = props => {
                         'https://platform.openai.com/account/api-keys',
                       )
                     }>
-                    Here
+                    here
                   </Text>{' '}
                   to generate key. Once Api key get's genrated, add key below
                   and Submit.
@@ -80,15 +80,15 @@ const AddKeyModal = props => {
                       marginTop: responsiveScreenHeight(0.5),
                     }}>
                     Current Key :{' '}
-                    <Text style={{color: grey[500], fontSize: fontsize.medium}}>
-                      {currentApiKey?.slice(0, 3)}....
-                      {currentApiKey?.slice(
-                        currentApiKey.length - 5,
-                        currentApiKey.length,
-                      )}
-                    </Text>
                   </Text>
                 )}
+                <Text
+                  style={{color: grey[500], fontSize: fontsize.small}}
+                  selectable={true}
+                  numberOfLines={1}
+                  ellipsizeMode="middle">
+                  {currentApiKey}
+                </Text>
 
                 <TextInput
                   style={style.input}

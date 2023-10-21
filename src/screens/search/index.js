@@ -354,7 +354,7 @@ const style = StyleSheet.create({
   flexRowSpaceArround: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: responsiveScreenHeight(1),
+    paddingTop: responsiveScreenHeight(1),
   },
   gifImage: {
     width: 60,
