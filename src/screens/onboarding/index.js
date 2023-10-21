@@ -27,9 +27,9 @@ const {width} = Dimensions.get('window');
 const slides = [
   {
     image: Bot,
-    title: 'VoaisAI : Your own',
+    title: 'Voais AI : Your own',
     subTitle: 'AI Assistant',
-    desc: 'VoaisAI can answer for followup \nquestions & be your advisor',
+    desc: 'Voais AI can answer for followup \nquestions & be your advisor',
     page: 'landingPage',
   },
   {
@@ -84,7 +84,7 @@ export default function Onboarding({navigation}) {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <StatusBar backgroundColor={secondary[500]} />
+      <StatusBar backgroundColor={secondary[500]} barStyle={'light-content'} />
       <FlatList
         ref={flatListRef}
         onMomentumScrollEnd={e => handleSlide(e)}

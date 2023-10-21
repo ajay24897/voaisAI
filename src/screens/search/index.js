@@ -225,7 +225,7 @@ export default function Search(props) {
   return (
     <SafeAreaView style={[style.wrapper, {backgroundColor: secondary[500]}]}>
       <Toast ref={ref} />
-      <StatusBar backgroundColor={secondary[500]} />
+      <StatusBar backgroundColor={secondary[500]} barStyle={'light-content'} />
       <View style={style.header}>
         <Image source={Bot} style={style.botImage} resizeMode={'contain'} />
         <TouchableOpacity onPress={() => setShowAddKeyModal(prev => !prev)}>
@@ -398,4 +398,37 @@ const style = StyleSheet.create({
   },
 });
 
-const dummyRes = [{content: 'Hi👋🏻, how can I help you?', role: 'assistant'}];
+// const dummyRes = [{content: 'Hi👋🏻, how can I help you?', role: 'assistant'}];
+const dummyRes = [
+  {content: 'Hi👋🏻, how can I help you?', role: 'assistant'},
+  {content: 'chemical formula for water', role: 'user'},
+  {
+    content:
+      'Its chemical formula, H2O, indicates that each of its molecules contains one oxygen and two hydrogen atoms.',
+    role: 'assistant',
+  },
+  {content: 'what is NASA', role: 'user'},
+  {
+    content:
+      'NASA stands for National Aeronautics and Space Administration.Its a U.S. government agency that is responsible for science and technology related to air and space.',
+    role: 'assistant',
+  },
+  {
+    content: 'draw horse',
+    role: 'user',
+  },
+  {
+    content:
+      'https://helloartsy.com/wp-content/uploads/kids/farm-animals/cartoon-horse-drawing/cartoon-horse-drawing-step-9.jpg',
+    role: 'assistant',
+  },
+  {
+    content: 'what is cricket',
+    role: 'user',
+  },
+  {
+    content:
+      'Cricket is a bat-and-ball game played between two teams of eleven players each on a cricket field, at the centre of which is a rectangular 22-yard-long pitch with a target called the wicket (a set of three wooden stumps topped by two bails) at each end. Each phase of play is called an innings during which one team bats, attempting to score as many runs as possible, whilst their opponents field. Depending on the type of match, the teams have one or two innings apiece and, when the first innings ends, the teams swap roles for the next innings. Except in matches which result in a draw, the winning team is the one that scores the most runs, including any extras gained.',
+    role: 'assistant',
+  },
+];
