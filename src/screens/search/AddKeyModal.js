@@ -11,8 +11,8 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from 'react-native';
-import React, {useState} from 'react';
-import {grey, primary2, secondary} from '../../constants/color';
+import React, {useEffect, useState} from 'react';
+import {commonColors, grey, primary2, secondary} from '../../constants/color';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   responsiveScreenHeight,
@@ -21,10 +21,27 @@ import {
 import {fontsize} from '../../constants/fontsize';
 
 const AddKeyModal = props => {
-  const {handleModalCallback} = props;
+  const {handleModalCallback, apiKey: currentApiKey} = props;
   const [apiKey, setApiKey] = useState('');
+  const [error, setError] = useState('');
 
   console.log('apiKey', apiKey);
+
+  useEffect(() => {
+    if (error?.length) {
+      setError('');
+    }
+  }, [apiKey]);
+
+  function handleSubmit() {
+    setError('');
+
+    if (apiKey?.trim().length < 30) {
+      setError('A Key value must be between 30 and 128 characters.');
+    } else {
+      handleModalCallback(apiKey?.trim());
+    }
+  }
   return (
     <Modal animationType="slide" transparent={true} visible={true}>
       <KeyboardAvoidingView
@@ -41,23 +58,37 @@ const AddKeyModal = props => {
                   access the functionality and data of the OpenAI platform.
                   {'\n'}
                   {'\n'}
-                  Click on below link and generate key
+                  Click{' '}
+                  <Text
+                    style={style.linkText}
+                    onPress={() =>
+                      Linking.openURL(
+                        'https://platform.openai.com/account/api-keys',
+                      )
+                    }>
+                    Here
+                  </Text>{' '}
+                  to generate key. Once Api key get's genrated, add key below
+                  and Submit.
                 </Text>
 
-                <Text
-                  style={style.linkText}
-                  onPress={() =>
-                    Linking.openURL(
-                      'https://platform.openai.com/account/api-keys',
-                    )
-                  }>
-                  https://platform.openai.com/account/api-keys
-                </Text>
-
-                <Text style={{color: grey[300]}}>
-                  {'\n'}
-                  Once Api key get's genrated, add key below and Submit
-                </Text>
+                {!!currentApiKey?.length && (
+                  <Text
+                    style={{
+                      color: grey[200],
+                      fontSize: fontsize.regular,
+                      marginTop: responsiveScreenHeight(0.5),
+                    }}>
+                    Current Key :{' '}
+                    <Text style={{color: grey[500], fontSize: fontsize.medium}}>
+                      {currentApiKey?.slice(0, 3)}....
+                      {currentApiKey?.slice(
+                        currentApiKey.length - 5,
+                        currentApiKey.length,
+                      )}
+                    </Text>
+                  </Text>
+                )}
 
                 <TextInput
                   style={style.input}
@@ -66,6 +97,9 @@ const AddKeyModal = props => {
                   onChangeText={text => setApiKey(text)}
                   placeholder="Add Api key here"
                 />
+                {!!error?.length && (
+                  <Text style={style.errorText}>{error}</Text>
+                )}
               </View>
               <View style={style.CTAView}>
                 <TouchableOpacity
@@ -93,7 +127,7 @@ const AddKeyModal = props => {
                       marginHorizontal: responsiveScreenWidth(2),
                     },
                   ]}
-                  onPress={() => handleModalCallback(apiKey)}>
+                  onPress={handleSubmit}>
                   <LinearGradient
                     colors={[primary2[700], primary2[800], primary2[900]]}
                     start={{x: 0, y: 0}}
@@ -137,8 +171,7 @@ const style = StyleSheet.create({
   contentContainer: {
     backgroundColor: secondary[500],
     borderRadius: 20,
-    minWidth: '30%',
-    maxWidth: '80%',
+    width: '75%',
   },
   textView: {
     borderRadius: 20,
@@ -164,5 +197,14 @@ const style = StyleSheet.create({
     textDecorationLine: 'underline',
     color: primary2[700],
   },
-  CTAView: {flexDirection: 'row', justifyContent: 'space-evenly'},
+  CTAView: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginHorizontal: responsiveScreenWidth(2),
+  },
+  errorText: {
+    fontSize: fontsize.regular,
+    color: commonColors.red,
+    marginTop: responsiveScreenHeight(0.5),
+  },
 });

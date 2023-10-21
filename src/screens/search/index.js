@@ -28,6 +28,10 @@ import voiceGif from '../../assets/recording.gif';
 import Toast from '../../commonComponents.js/toast';
 import Bot from '../../assets/images/bot.png';
 import AddKeyModal from './AddKeyModal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// let key = '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';
+let key = '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';
 
 export default function Search(props) {
   const [messages, setMessages] = useState(dummyRes);
@@ -48,6 +52,15 @@ export default function Search(props) {
     BackHandler.addEventListener('hardwareBackPress', handleBackButton);
     return () =>
       BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
+  }, []);
+  console.log('apiKey', apiKey);
+
+  useEffect(() => {
+    async function checkApiKey() {
+      const api_key = await AsyncStorage.getItem('api_key');
+      setApiKey(api_key ?? key);
+    }
+    checkApiKey();
   }, []);
 
   useEffect(() => {
@@ -135,7 +148,7 @@ export default function Search(props) {
       newMsg.push({role: 'user', content: result.trim()});
       setMessages([...newMsg]);
       setIsLoading(true);
-      apiCall(result.trim(), newMsg)
+      apiCall(result.trim(), newMsg, apiKey)
         .then(res => {
           setIsLoading(false);
 
@@ -201,10 +214,10 @@ export default function Search(props) {
     setIsSpeaking(false);
   };
 
-  const handleModalCallback = key => {
-    if (key?.length > 0) {
-      setApiKey(key);
-      console.log('key', key);
+  const handleModalCallback = async keyValue => {
+    if (keyValue?.length > 0) {
+      await AsyncStorage.setItem('api_key', keyValue);
+      setApiKey(keyValue);
     }
     setShowAddKeyModal(false);
   };
@@ -213,13 +226,7 @@ export default function Search(props) {
     <SafeAreaView style={[style.wrapper, {backgroundColor: secondary[500]}]}>
       <Toast ref={ref} />
       <StatusBar backgroundColor={secondary[500]} />
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          marginHorizontal: responsiveScreenWidth(2),
-          marginBottom: responsiveScreenHeight(1),
-        }}>
+      <View style={style.header}>
         <Image source={Bot} style={style.botImage} resizeMode={'contain'} />
         <TouchableOpacity onPress={() => setShowAddKeyModal(prev => !prev)}>
           <Text style={{color: grey[300], fontSize: fontsize.medium}}>
@@ -296,7 +303,11 @@ export default function Search(props) {
         </View>
       </View>
       {showAddKeyModal && (
-        <AddKeyModal {...props} handleModalCallback={handleModalCallback} />
+        <AddKeyModal
+          {...props}
+          handleModalCallback={handleModalCallback}
+          apiKey={apiKey}
+        />
       )}
     </SafeAreaView>
   );
@@ -377,57 +388,14 @@ const style = StyleSheet.create({
   botImage: {
     width: 60,
     height: 60,
-    // marginLeft: 'auto',
     marginRight: 'auto',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: responsiveScreenWidth(2),
+    marginBottom: responsiveScreenHeight(1),
   },
 });
 
 const dummyRes = [{content: 'Hi👋🏻, how can I help you?', role: 'assistant'}];
-
-// const dummyRes = [
-//   {content: 'how many legs do cow have', role: 'user'},
-//   {content: 'A cow has four legs.', role: 'assistant'},
-//   {content: 'best place to visit in Mumbai', role: 'user'},
-//   {content: 'image of cow', role: 'user'},
-//   {
-//     content:
-//       'https://oaidalleapiprodscus.blob.core.windows.net/private/org-O9DYCkYkwKEHhVKBHibYkIs8/user-xTE8gDGvaoLkCMd4JvX3jH5z/img-GfwmQYhB08Beja757FgoFgEN.png?st=2023-08-05T16%3A24%3A07Z&se=2023-08-05T18%3A24%3A07Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-08-05T11%3A46%3A32Z&ske=2023-08-06T11%3A46%3A32Z&sks=b&skv=2021-08-06&sig=cY7GBt59NbkBqJHsQQttAownIuShw4pl59uxaG6tLII%3D',
-//     role: 'assistant',
-//   },
-//   {
-//     content:
-//       'Choosing the best Reebok shoes depends on your personal preferences, activities, and needs. Here are some popular and highly recommended Reebok shoe models 1. Reebok Nano X: These shoes are designed for cross-training and are known for their durability and versatility.2. Reebok Classic Leather: A timeless and iconic sneaker that offers both style and comfort. Its great for casual wear.3. Reebok Floatride Run: Ideal for running, these shoes provide excellent cushioning and responsiveness for a smooth and comfortable ride',
-
-//     role: 'assistant',
-//   },
-//   {content: 'how many legs do cow have', role: 'user'},
-//   {content: 'A cow has four legs.', role: 'assistant'},
-//   {content: 'best place to visit in Mumbai', role: 'user'},
-//   {content: 'image of cow', role: 'user'},
-//   {
-//     content:
-//       'https://oaidalleapiprodscus.blob.core.windows.net/private/org-O9DYCkYkwKEHhVKBHibYkIs8/user-xTE8gDGvaoLkCMd4JvX3jH5z/img-GfwmQYhB08Beja757FgoFgEN.png?st=2023-08-05T16%3A24%3A07Z&se=2023-08-05T18%3A24%3A07Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-08-05T11%3A46%3A32Z&ske=2023-08-06T11%3A46%3A32Z&sks=b&skv=2021-08-06&sig=cY7GBt59NbkBqJHsQQttAownIuShw4pl59uxaG6tLII%3D',
-//     role: 'assistant',
-//   },
-//   {
-//     content:
-//       'Choosing the best Reebok shoes depends on your personal preferences, activities, and needs. Here are some popular and highly recommended Reebok shoe models 1. Reebok Nano X: These shoes are designed for cross-training and are known for their durability and versatility.2. Reebok Classic Leather: A timeless and iconic sneaker that offers both style and comfort. Its great for casual wear.3. Reebok Floatride Run: Ideal for running, these shoes provide excellent cushioning and responsiveness for a smooth and comfortable ride',
-
-//     role: 'assistant',
-//   },
-//   {content: 'how many legs do cow have', role: 'user'},
-//   {content: 'A cow has four legs.', role: 'assistant'},
-//   {content: 'best place to visit in Mumbai', role: 'user'},
-//   {content: 'image of cow', role: 'user'},
-//   {
-//     content:
-//       'https://oaidalleapiprodscus.blob.core.windows.net/private/org-O9DYCkYkwKEHhVKBHibYkIs8/user-xTE8gDGvaoLkCMd4JvX3jH5z/img-GfwmQYhB08Beja757FgoFgEN.png?st=2023-08-05T16%3A24%3A07Z&se=2023-08-05T18%3A24%3A07Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-08-05T11%3A46%3A32Z&ske=2023-08-06T11%3A46%3A32Z&sks=b&skv=2021-08-06&sig=cY7GBt59NbkBqJHsQQttAownIuShw4pl59uxaG6tLII%3D',
-//     role: 'assistant',
-//   },
-//   {
-//     content:
-//       'Choosing the best Reebok shoes depends on your personal preferences, activities, and needs. Here are some popular and highly recommended Reebok shoe models 1. Reebok Nano X: These shoes are designed for cross-training and are known for their durability and versatility.2. Reebok Classic Leather: A timeless and iconic sneaker that offers both style and comfort. Its great for casual wear.3. Reebok Floatride Run: Ideal for running, these shoes provide excellent cushioning and responsiveness for a smooth and comfortable ride',
-
-//     role: 'assistant',
-//   },
-// ];

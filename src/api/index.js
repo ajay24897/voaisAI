@@ -1,22 +1,24 @@
 import axios from 'axios';
 
 // let apiKey = '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';
-let apiKey = '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';
-// let apiKey = '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';
-const client = axios.create({
-  headers: {
-    Authorization: 'Bearer ' + apiKey,
-    'Content-Type': 'application/json',
-    timeout: 30000,
-  },
-});
+
+const client = apiKey => {
+  console.log('client', apiKey);
+  return axios.create({
+    headers: {
+      Authorization: 'Bearer ' + apiKey,
+      'Content-Type': 'application/json',
+      timeout: 30000,
+    },
+  });
+};
 
 const chatgptUrl = 'https://api.openai.com/v1/chat/completions';
 const dalleUrl = 'https://api.openai.com/v1/images/generations';
 
-export const apiCall = async (prompt, messages) => {
+export const apiCall = async (prompt, messages, key) => {
   try {
-    const res = await client.post(chatgptUrl, {
+    const res = await client(key).post(chatgptUrl, {
       model: 'gpt-3.5-turbo',
       messages: [
         {
@@ -34,10 +36,10 @@ export const apiCall = async (prompt, messages) => {
       prompt.includes('sketch')
     ) {
       console.log('dalle api call');
-      return dalleApiCall(prompt, messages);
+      return dalleApiCall(prompt, messages, key);
     } else {
       console.log('chatgpt api call');
-      return chatgptApiCall(prompt, messages);
+      return chatgptApiCall(prompt, messages, key);
     }
   } catch (err) {
     console.log('error: ', err);
@@ -45,9 +47,9 @@ export const apiCall = async (prompt, messages) => {
   }
 };
 
-const chatgptApiCall = async (prompt, messages) => {
+const chatgptApiCall = async (prompt, messages, key) => {
   try {
-    const res = await client.post(chatgptUrl, {
+    const res = await client(key).post(chatgptUrl, {
       model: 'gpt-3.5-turbo',
       messages,
     });
@@ -64,9 +66,9 @@ const chatgptApiCall = async (prompt, messages) => {
   }
 };
 
-const dalleApiCall = async (prompt, messages) => {
+const dalleApiCall = async (prompt, messages, key) => {
   try {
-    const res = await client.post(dalleUrl, {
+    const res = await client(key).post(dalleUrl, {
       prompt,
       n: 1,
       size: '512x512',

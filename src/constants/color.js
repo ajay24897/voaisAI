@@ -34,4 +34,5 @@ export const grey = {
 
 export const commonColors = {
   white: '#fff',
+  red: '#DC143C', // error text
 };

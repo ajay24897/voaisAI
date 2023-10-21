@@ -1,9 +1,8 @@
-import {View, Text, StyleSheet, Animated} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import React, {
   forwardRef,
   useEffect,
   useImperativeHandle,
-  useRef,
   useState,
 } from 'react';
 import {
@@ -23,7 +22,7 @@ const Toast = forwardRef((props, ref) => {
       setTimeout(() => {
         setShowToast(false);
         setToastMes('');
-      }, 3000);
+      }, 5000);
     }
 
     return () => clearTimeout(timer);
