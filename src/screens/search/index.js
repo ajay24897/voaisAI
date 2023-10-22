@@ -107,14 +107,19 @@ export default function Search(props) {
       e.error.message.includes('9/Insufficient permissions') ||
       e.error.message.includes('User denied access to speech recognition')
     ) {
+      const microphoneAccess =
+        Platform.OS === 'ios' ? 'Speech recognition' : 'Microphone';
+
       ref.current.toast(
-        'Microphone access was denied, Go to permission enable the microphone access',
+        `${microphoneAccess} access was denied, Go to app-settings and enable the ${microphoneAccess} access`,
       );
-      if (Platform.OS === 'ios') {
-        Linking.openURL('app-settings:');
-      } else {
-        Linking.openSettings();
-      }
+      setTimeout(() => {
+        if (Platform.OS === 'ios') {
+          Linking.openURL('app-settings:');
+        } else {
+          Linking.openSettings();
+        }
+      }, 3000);
     } else {
       ref.current.toast(e.error.message);
     }
