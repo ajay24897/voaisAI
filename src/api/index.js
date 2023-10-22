@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-// let apiKey = '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';
-
 const client = apiKey => {
   console.log('client', apiKey);
   return axios.create({

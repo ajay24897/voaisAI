@@ -61,9 +61,6 @@ function Message({mes}) {
             imageStyle={style.borderRadius}
             onLoad={() => setImageLoading(false)}
             source={{uri: mes.content}}
-            // source={{
-            //   uri: 'https://images.pexels.com/photos/699466/pexels-photo-699466.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-            // }}
             resizeMode="cover"
             style={style.image}
             alt="image can not load">

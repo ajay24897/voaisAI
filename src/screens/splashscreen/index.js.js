@@ -10,7 +10,6 @@ const SplashScreen = props => {
 
   async function checkOnboardingDone() {
     const onboarding_done = await AsyncStorage.getItem('onboarding_done');
-    console.log('onboarding_done', onboarding_done);
     if (onboarding_done) {
       props.navigation.replace('search');
     } else {
