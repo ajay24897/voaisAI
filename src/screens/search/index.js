@@ -10,6 +10,7 @@ import {
   FlatList,
   ActivityIndicator,
   BackHandler,
+  Linking,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import Voice from '@react-native-community/voice';
@@ -102,6 +103,18 @@ export default function Search(props) {
     setIsRecordig(false);
     if (e.error.message.includes('7/No match')) {
       ref.current.toast('Unable to recognize your voice');
+    } else if (
+      e.error.message.includes('9/Insufficient permissions') ||
+      e.error.message.includes('User denied access to speech recognition')
+    ) {
+      ref.current.toast(
+        'Microphone access was denied, Go to permission enable the microphone access',
+      );
+      if (Platform.OS === 'ios') {
+        Linking.openURL('app-settings:');
+      } else {
+        Linking.openSettings();
+      }
     } else {
       ref.current.toast(e.error.message);
     }

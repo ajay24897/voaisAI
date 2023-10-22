@@ -9,7 +9,7 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
-import {commonColors, secondary} from '../constants/color';
+import {commonColors, primary2} from '../constants/color';
 import {fontsize} from '../constants/fontsize';
 
 const Toast = forwardRef((props, ref) => {
@@ -57,10 +57,11 @@ const style = StyleSheet.create({
     justifyContent: 'center',
   },
   contentConatiner: {
-    backgroundColor: secondary[400],
+    backgroundColor: primary2[800],
     paddingHorizontal: responsiveWidth(4),
     paddingVertical: responsiveHeight(1),
     borderRadius: 100,
+    marginHorizontal: responsiveWidth(10),
   },
   message: {
     fontSize: fontsize.small,
