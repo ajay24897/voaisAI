@@ -25,8 +25,6 @@ const AddKeyModal = props => {
   const [apiKey, setApiKey] = useState('');
   const [error, setError] = useState('');
 
-  console.log('apiKey', apiKey);
-
   useEffect(() => {
     if (error?.length) {
       setError('');
