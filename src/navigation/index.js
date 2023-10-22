@@ -12,11 +12,7 @@ const Stack = createNativeStackNavigator();
 function Navigation() {
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          navigationBarColor: secondary[500],
-          gestureEnabled: true,
-        }}>
+      <Stack.Navigator>
         <Stack.Screen
           name="SplashScreen"
           component={SplashScreen}
