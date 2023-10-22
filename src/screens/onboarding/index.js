@@ -21,6 +21,7 @@ import VoiceSearch from '../../assets/images/voiceSearch2.png';
 
 import Onboardingscreen from './onboardingPages';
 import {GradientText} from '../../commonComponents.js/GradientText';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width} = Dimensions.get('window');
 
@@ -78,7 +79,7 @@ export default function Onboarding({navigation}) {
   };
 
   const OnboardingFlowDone = async () => {
-    // dispatch(onboardingDone());
+    await AsyncStorage.setItem('onboarding_done', 'yes');
     navigation.push('search');
   };
 
